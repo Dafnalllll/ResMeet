@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy import text
 from app.routers.recording_router import router as recording_router
+from app.routers.transcript_router import router as transcript_router
 
 from app.core.database import engine
 
@@ -10,6 +11,8 @@ app = FastAPI(
 )
 
 app.include_router(recording_router)
+app.include_router(transcript_router)
+
 
 @app.get("/")
 def root():

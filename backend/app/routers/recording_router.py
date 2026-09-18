@@ -1,7 +1,10 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+
+import os
 
 from app.core.dependencies import get_db
 from app.models.recording import Recording
@@ -66,6 +69,35 @@ def get_recording(
         )
 
     return recording
+
+@router.get("/{recording_id}/download")
+def download_recording(
+    recording_id: UUID,
+    db: Session = Depends(get_db)
+):
+    recording = (
+        db.query(Recording)
+        .filter(Recording.id == recording_id)
+        .first()
+    )
+
+    if not recording:
+        raise HTTPException(
+            status_code=404,
+            detail="Recording not found"
+        )
+
+    if not os.path.exists(recording.file_path):
+        raise HTTPException(
+            status_code=404,
+            detail="Audio file not found"
+        )
+
+    return FileResponse(
+        path=recording.file_path,
+        filename=recording.filename,
+        media_type="audio/mpeg"
+    )
 
 @router.delete("/{recording_id}")
 def delete_recording(

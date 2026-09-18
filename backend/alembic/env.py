@@ -5,6 +5,7 @@ from alembic import context
 
 from app.core.database import Base
 from app.models.recording import Recording
+from app.models.transcript import Transcript
 
 # Alembic Config object
 config = context.config
