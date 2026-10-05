@@ -64,6 +64,51 @@ def get_transcripts(
 
 
 @router.get(
+    "/recording/{recording_id}",
+    response_model=TranscriptResponse
+)
+def get_transcript_by_recording_id(
+    recording_id: UUID,
+    db: Session = Depends(get_db)
+):
+    transcript = (
+        db.query(Transcript)
+        .filter(Transcript.recording_id == recording_id)
+        .first()
+    )
+
+    if not transcript:
+        raise HTTPException(
+            status_code=404,
+            detail="Transcript not found"
+        )
+
+    return transcript
+
+
+@router.get(
+    "/{transcript_id}",
+    response_model=TranscriptResponse
+)
+def get_transcript(
+    transcript_id: UUID,
+    db: Session = Depends(get_db)
+):
+    transcript = (
+        db.query(Transcript)
+        .filter(Transcript.id == transcript_id)
+        .first()
+    )
+
+    if not transcript:
+        raise HTTPException(
+            status_code=404,
+            detail="Transcript not found"
+        )
+
+    return transcript
+
+@router.get(
     "/{transcript_id}",
     response_model=TranscriptResponse
 )

@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --rsm-paper: #f5f2ea;
+  --rsm-card: #fffdf8;
+  --rsm-ink: #191712;
+  --rsm-ink-soft: #5d5747;
+  --rsm-ink-mute: #8d8674;
+  --rsm-line: #e4ddcd;
+  --rsm-line-strong: #cdc5af;
+  --rsm-accent: #b0451f;
+  --rsm-accent-ink: #7d2f13;
+  --rsm-accent-soft: rgba(176, 69, 31, 0.1);
+  --rsm-ok: #2f6d4f;
+  --rsm-ok-soft: rgba(47, 109, 79, 0.12);
+  --rsm-warn: #8a6414;
+  --rsm-warn-soft: rgba(138, 100, 20, 0.14);
+  --rsm-elevation: 0 1px 2px rgba(25, 23, 18, 0.04),
+    0 22px 48px -30px rgba(25, 23, 18, 0.45);
+  --background: var(--rsm-paper);
+  --foreground: var(--rsm-ink);
 }
 
 @theme inline {
@@ -14,13 +30,234 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --rsm-paper: #131210;
+    --rsm-card: #1b1916;
+    --rsm-ink: #f3eee2;
+    --rsm-ink-soft: #b3ab98;
+    --rsm-ink-mute: #847c6a;
+    --rsm-line: #2c2822;
+    --rsm-line-strong: #3d3830;
+    --rsm-accent: #e07a52;
+    --rsm-accent-ink: #f0a184;
+    --rsm-accent-soft: rgba(224, 122, 82, 0.16);
+    --rsm-ok: #6fc39a;
+    --rsm-ok-soft: rgba(111, 195, 154, 0.16);
+    --rsm-warn: #e0b667;
+    --rsm-warn-soft: rgba(224, 182, 103, 0.16);
+    --rsm-elevation: 0 1px 2px rgba(0, 0, 0, 0.4),
+      0 24px 50px -32px rgba(0, 0, 0, 0.9);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--rsm-paper);
+  color: var(--rsm-ink);
   font-family: Arial, Helvetica, sans-serif;
+}
+/* ============================================================
+   Recording detail — "Editorial: paper & ink" theme
+   Everything below is scoped to .rsm-page so other pages that
+   still use the default look stay untouched.
+   ============================================================ */
+
+@theme {
+  --animate-rsm-rise: rsm-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-rsm-fade: rsm-fade 0.9s ease-out both;
+  --animate-rsm-eq: rsm-eq 1.15s ease-in-out infinite;
+  --animate-rsm-sweep: rsm-sweep 4.5s ease-in-out infinite;
+  --animate-rsm-sheen: rsm-sheen 1.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-rsm-halo: rsm-halo 2.8s ease-out infinite;
+  --animate-rsm-spin: rsm-spin 0.9s linear infinite;
+  --animate-rsm-typing: rsm-typing 1.4s steps(3, end) infinite;
+
+  @keyframes rsm-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes rsm-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes rsm-eq {
+    0%,
+    100% {
+      transform: scaleY(0.22);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes rsm-sweep {
+    0% {
+      transform: translateX(-14%);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(114%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes rsm-sheen {
+    from {
+      transform: translateX(-140%) skewX(-18deg);
+    }
+    to {
+      transform: translateX(320%) skewX(-18deg);
+    }
+  }
+
+  @keyframes rsm-halo {
+    0% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
+    70% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes rsm-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes rsm-typing {
+    0% {
+      content: "";
+    }
+    33% {
+      content: ".";
+    }
+    66% {
+      content: "..";
+    }
+    100% {
+      content: "...";
+    }
+  }
+}
+
+/* Fine dotted graph-paper texture behind the whole page. */
+.rsm-paper-texture {
+  background-image: radial-gradient(var(--rsm-line) 1px, transparent 1px),
+    radial-gradient(
+      120% 80% at 50% -10%,
+      var(--rsm-card) 0%,
+      var(--rsm-paper) 60%
+    );
+  background-size: 26px 26px, 100% 100%;
+}
+
+.rsm-lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+
+.rsm-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--rsm-elevation);
+}
+
+/* Light sweeping sheen on interactive surfaces. */
+.rsm-action {
+  position: relative;
+  overflow: hidden;
+}
+
+.rsm-action::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.24),
+    transparent
+  );
+  transform: translateX(-160%) skewX(-18deg);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rsm-action:hover::after {
+  transform: translateX(280%) skewX(-18deg);
+}
+
+/* Shimmering placeholder block used by the loading skeleton. */
+.rsm-skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--rsm-line);
+}
+
+.rsm-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--rsm-card), transparent);
+  animation: var(--animate-rsm-sheen);
+}
+
+.rsm-eq-bar {
+  transform-origin: bottom;
+}
+
+.rsm-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rsm-line-strong) transparent;
+}
+
+.rsm-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.rsm-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--rsm-line-strong);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsm-page *,
+  .rsm-page *::before,
+  .rsm-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .rsm-eq-bar {
+    animation: none !important;
+    transform: scaleY(0.6) !important;
+  }
 }
