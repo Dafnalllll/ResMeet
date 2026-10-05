@@ -7,6 +7,7 @@ import ListHeader from "@/components/recording/list/ListHeader";
 import RecordingListItem from "@/components/recording/list/RecordingListItem";
 import RecordingListSkeleton from "@/components/recording/list/RecordingListSkeleton";
 import RecordingsEmptyState from "@/components/recording/list/RecordingsEmptyState";
+import UploadModal from "@/components/recording/list/UploadModal";
 import { getRecordings } from "@/services/recording";
 import type { Recording } from "@/types/recording";
 
@@ -21,6 +22,7 @@ export default function Card() {
   const [hasError, setHasError] = useState(false);
   const [query, setQuery] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -44,6 +46,29 @@ export default function Card() {
       isCancelled = true;
     };
   }, [reloadKey]);
+
+  // Polling otomatis jika ada recording yang sedang PROCESSING
+  useEffect(() => {
+    const hasProcessing = recordings.some(
+      (r) =>
+        r.processing_status?.toUpperCase() === "PROCESSING" ||
+        r.transcription_status?.toUpperCase() === "PROCESSING"
+    );
+
+    if (!hasProcessing) return;
+
+    const interval = setInterval(() => {
+      getRecordings()
+        .then((data) => {
+          setRecordings(data);
+        })
+        .catch((err) => {
+          console.error("Gagal poll daftar rekaman:", err);
+        });
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [recordings]);
 
   const visibleRecordings = useMemo(() => {
     const keyword = query.trim().toLowerCase();
@@ -72,6 +97,7 @@ export default function Card() {
         visibleCount={visibleRecordings.length}
         query={query}
         onQueryChange={setQuery}
+        onOpenUploadModal={() => setIsUploadModalOpen(true)}
       />
 
       <section aria-label="Daftar rekaman">
@@ -102,5 +128,14 @@ export default function Card() {
     </div>
   );
 
-  return <PageShell>{content}</PageShell>;
+  return (
+    <>
+      <PageShell>{content}</PageShell>
+      <UploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onSuccess={() => setReloadKey((prev) => prev + 1)}
+      />
+    </>
+  );
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { SearchIcon } from "@/components/icons/ActionIcons";
+import { SearchIcon, SparklesIcon } from "@/components/icons/ActionIcons";
 
 interface ListHeaderProps {
   totalCount: number;
   visibleCount: number;
   query: string;
   onQueryChange: (value: string) => void;
+  onOpenUploadModal: () => void;
 }
 
 export default function ListHeader({
@@ -14,6 +15,7 @@ export default function ListHeader({
   visibleCount,
   query,
   onQueryChange,
+  onOpenUploadModal,
 }: ListHeaderProps) {
   const isFiltering = query.trim().length > 0;
 
@@ -34,7 +36,7 @@ export default function ListHeader({
 
         <p className="max-w-xl text-sm leading-relaxed text-(--rsm-ink-soft)]">
           Semua rekaman beserta transkripnya tersimpan di sini. Pilih satu
-          rekaman untuk membaca transkrip lengkapnya.
+          rekaman untuk membaca transkrip lengkapnya atau unggah rekaman baru.
         </p>
       </div>
 
@@ -45,21 +47,32 @@ export default function ListHeader({
             : `${totalCount.toLocaleString("id-ID")} rekaman`}
         </p>
 
-        <label className="group relative flex w-full items-center sm:max-w-xs">
-          <span className="pointer-events-none absolute left-3.5 text-(--rsm-ink-mute)] transition-colors group-focus-within:text-(--rsm-accent)]">
-            <SearchIcon className="h-4 w-4" />
-          </span>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="button"
+            onClick={onOpenUploadModal}
+            className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-full bg-(--rsm-accent)] px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-white transition-colors hover:bg-(--rsm-accent-ink)]"
+          >
+            <SparklesIcon className="h-4 w-4" />
+            Unggah Rekaman
+          </button>
 
-          <span className="sr-only">Cari rekaman</span>
+          <label className="group relative flex w-full items-center sm:max-w-xs">
+            <span className="pointer-events-none absolute left-3.5 text-(--rsm-ink-mute)] transition-colors group-focus-within:text-(--rsm-accent)]">
+              <SearchIcon className="h-4 w-4" />
+            </span>
 
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="Cari judul atau nama berkas…"
-            className="w-full rounded-full border border-(--rsm-line)] bg-(--rsm-card)] py-2.5 pr-4 pl-10 text-sm text-(--rsm-ink)] transition-colors outline-none placeholder:text-(--rsm-ink-mute)] focus:border-(--rsm-accent)]"
-          />
-        </label>
+            <span className="sr-only">Cari rekaman</span>
+
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder="Cari judul atau nama berkas…"
+              className="w-full rounded-full border border-(--rsm-line)] bg-(--rsm-card)] py-2.5 pr-4 pl-10 text-sm text-(--rsm-ink)] transition-colors outline-none placeholder:text-(--rsm-ink-mute)] focus:border-(--rsm-accent)]"
+            />
+          </label>
+        </div>
       </div>
     </header>
   );

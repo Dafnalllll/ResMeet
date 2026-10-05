@@ -162,3 +162,20 @@ export function CloseIcon({ className = "h-4 w-4", ...props }: IconProps) {
     </svg>
   );
 }
+
+export function TrashIcon({ className = "h-4 w-4", ...props }: IconProps) {
+  return (
+    <svg
+      {...defaultIconProps}
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M19 6l-1 14H6L5 6" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+    </svg>
+  );
+}

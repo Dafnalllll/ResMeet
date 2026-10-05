@@ -4,13 +4,17 @@ export type StatusTone = "ok" | "busy" | "error" | "neutral";
 
 const TONE_BY_STATUS: Record<string, StatusTone> = {
   uploaded: "neutral",
+  UPLOADED: "neutral",
   queued: "busy",
   processing: "busy",
+  PROCESSING: "busy",
   transcribing: "busy",
   transcribed: "ok",
   completed: "ok",
+  COMPLETED: "ok",
   done: "ok",
   failed: "error",
+  FAILED: "error",
   error: "error",
 };
 

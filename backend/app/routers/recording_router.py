@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -12,11 +12,47 @@ from app.schemas.recording_schema import (
     RecordingCreate,
     RecordingResponse
 )
+from app.services.storage import save_upload_file
+from app.services.whisper_service import transcribe_audio_task
 
 router = APIRouter(
     prefix="/recordings",
     tags=["Recordings"]
 )
+
+@router.post(
+    "/upload",
+    response_model=RecordingResponse
+)
+def upload_recording(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    title: str | None = Form(None),
+    db: Session = Depends(get_db)
+):
+    file_path, filename, file_size, mime_type = save_upload_file(file)
+
+    recording_title = title if title and title.strip() else os.path.splitext(filename)[0]
+
+    recording = Recording(
+        title=recording_title,
+        filename=filename,
+        file_path=file_path,
+        file_size=file_size,
+        mime_type=mime_type,
+        status="uploaded",
+        processing_status="UPLOADED",
+        transcription_status="PENDING",
+        duration=None
+    )
+
+    db.add(recording)
+    db.commit()
+    db.refresh(recording)
+
+    background_tasks.add_task(transcribe_audio_task, str(recording.id), file_path)
+
+    return recording
 
 @router.post(
     "",
@@ -115,6 +151,12 @@ def delete_recording(
             status_code=404,
             detail="Recording not found"
         )
+
+    if recording.file_path and os.path.exists(recording.file_path):
+        try:
+            os.remove(recording.file_path)
+        except Exception:
+            pass
 
     db.delete(recording)
     db.commit()

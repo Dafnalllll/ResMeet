@@ -9,6 +9,10 @@ class RecordingCreate(BaseModel):
     filename: str
     file_path: str
     duration: int | None = None
+    file_size: int | None = None
+    mime_type: str | None = None
+    processing_status: str | None = "UPLOADED"
+    transcription_status: str | None = "PENDING"
 
 
 class RecordingResponse(BaseModel):
@@ -16,8 +20,12 @@ class RecordingResponse(BaseModel):
     title: str
     filename: str
     file_path: str
-    duration: int | None
-    status: str
+    duration: int | None = None
+    file_size: int | None = None
+    mime_type: str | None = None
+    status: str = "uploaded"
+    processing_status: str | None = "UPLOADED"
+    transcription_status: str | None = "PENDING"
     created_at: datetime
 
     class Config:

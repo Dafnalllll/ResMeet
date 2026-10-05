@@ -33,7 +33,7 @@ export default function ExportButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`rsm-action group flex min-w-44 items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-300 hover:-translate-y-0.5 disabled:pointer-events-none disabled:opacity-45 ${VARIANT_STYLES[variant]}`}
+      className={`rsm-action group flex min-w-44 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 ${VARIANT_STYLES[variant]}`}
     >
       <span className="transition-transform duration-300 group-hover:-translate-y-0.5">
         {icon}

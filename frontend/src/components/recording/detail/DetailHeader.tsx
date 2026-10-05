@@ -1,6 +1,7 @@
 import type { Recording } from "@/types/recording";
 import { formatDuration, formatDurationLong, formatFullDate, formatTimeOfDay } from "@/lib/format";
 import { ArrowLeftIcon } from "@/components/icons/ArrowIcons";
+import { TrashIcon } from "@/components/icons/ActionIcons";
 import { CalendarIcon, ClockIcon, TagIcon } from "@/components/icons/MetaIcons";
 import StatusPill from "./StatusPill";
 import WaveformStrip from "./WaveformStrip";
@@ -8,19 +9,31 @@ import WaveformStrip from "./WaveformStrip";
 interface DetailHeaderProps {
   recording: Recording;
   onBack: () => void;
+  onDelete: () => void;
 }
 
-export default function DetailHeader({ recording, onBack }: DetailHeaderProps) {
+export default function DetailHeader({ recording, onBack, onDelete }: DetailHeaderProps) {
   return (
     <header className="space-y-8">
-      <button
-        type="button"
-        onClick={onBack}
-        className="rsm-action cursor-pointer group inline-flex items-center gap-2 rounded-full border border-(--rsm-line)] bg-(--rsm-card)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-(--rsm-ink-soft)] transition-colors hover:border-(--rsm-line-strong)] hover:text-(--rsm-ink)] animate-rsm-fade"
-      >
-        <ArrowLeftIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
-        Kembali ke daftar
-      </button>
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={onBack}
+          className="rsm-action cursor-pointer group inline-flex items-center gap-2 rounded-full border border-(--rsm-line)] bg-(--rsm-card)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-(--rsm-ink-soft)] transition-colors hover:border-(--rsm-line-strong)] hover:text-(--rsm-ink)] animate-rsm-fade"
+        >
+          <ArrowLeftIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
+          Kembali ke daftar
+        </button>
+
+        <button
+          type="button"
+          onClick={onDelete}
+          className="rsm-action cursor-pointer group inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-(--rsm-card)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-red-500 transition-colors hover:border-red-500 hover:bg-red-500/10 animate-rsm-fade"
+        >
+          <TrashIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-110" />
+          Hapus Recording
+        </button>
+      </div>
 
       <div
         className="space-y-5 animate-rsm-rise"

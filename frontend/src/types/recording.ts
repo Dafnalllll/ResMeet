@@ -3,7 +3,11 @@ export interface Recording {
   title: string;
   filename: string;
   file_path: string;
-  duration: number;
+  duration: number | null;
+  file_size?: number | null;
+  mime_type?: string | null;
   status: string;
+  processing_status?: string;
+  transcription_status?: string;
   created_at: string;
 }

@@ -20,7 +20,15 @@ class Recording(Base):
 
     duration = Column(Integer, nullable=True)
 
+    file_size = Column(Integer, nullable=True)
+
+    mime_type = Column(String(100), nullable=True)
+
     status = Column(String(50), default="uploaded")
+
+    processing_status = Column(String(50), default="UPLOADED")
+
+    transcription_status = Column(String(50), default="PENDING")
 
     created_at = Column(
         DateTime(timezone=True),

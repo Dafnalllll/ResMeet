@@ -24,3 +24,7 @@ export const getTranscriptByRecordingId = async (
     throw error;
   }
 };
+
+export const deleteTranscript = async (id: string): Promise<void> => {
+    await api.delete(`/transcripts/${id}`);
+};

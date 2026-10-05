@@ -9,6 +9,7 @@ import PageShell from "@/components/layout/PageShell";
 import DetailHeader from "@/components/recording/detail/DetailHeader";
 import DetailSkeleton from "@/components/recording/detail/DetailSkeleton";
 import DetailToast from "@/components/recording/detail/DetailToast";
+import DeleteConfirmationModal from "@/components/recording/detail/DeleteConfirmationModal";
 import MetadataPanel from "@/components/recording/detail/MetadataPanel";
 import NotFoundState, {
   type NotFoundReason,
@@ -21,7 +22,7 @@ import {
   downloadTranscriptPdf,
   downloadTranscriptTxt,
 } from "@/lib/transcriptExport";
-import { getRecordingById } from "@/services/recording";
+import { getRecordingById, deleteRecording } from "@/services/recording";
 import { getTranscriptByRecordingId } from "@/services/transcript";
 import type { Recording } from "@/types/recording";
 import type { Transcript } from "@/types/transcript";
@@ -38,6 +39,8 @@ export default function Detail() {
   const [errorReason, setErrorReason] = useState<NotFoundReason | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const exportTitle = recording?.title ?? "transcript";
 
   useEffect(() => {
@@ -116,6 +119,29 @@ export default function Detail() {
     }
   }, [exportTitle, transcript]);
 
+  const handleDelete = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, []);
+
+  const handleCancelDelete = useCallback(() => {
+    if (!isDeleting) {
+      setIsDeleteModalOpen(false);
+    }
+  }, [isDeleting]);
+
+  const handleConfirmDelete = useCallback(async () => {
+    setIsDeleting(true);
+    try {
+      await deleteRecording(recordingId);
+      router.push("/recordings");
+    } catch (error) {
+      console.error("Gagal menghapus recording:", error);
+      setToastMessage("Gagal menghapus recording. Coba lagi.");
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
+    }
+  }, [recordingId, router]);
+
   const content = isLoading ? (
     <DetailSkeleton />
   ) : errorReason || !recording ? (
@@ -126,7 +152,7 @@ export default function Detail() {
     />
   ) : (
     <div className="space-y-8">
-      <DetailHeader recording={recording} onBack={handleBack} />
+      <DetailHeader recording={recording} onBack={handleBack} onDelete={handleDelete} />
 
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-2 lg:sticky lg:top-8 lg:self-start">
@@ -164,6 +190,12 @@ export default function Detail() {
     <>
       <PageShell>{content}</PageShell>
       <DetailToast message={toastMessage} onDismiss={handleDismissToast} />
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        isDeleting={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </>
   );
 }
