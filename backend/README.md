@@ -11,7 +11,7 @@ Backend **ResMeet** menangani data rekaman dan transkrip melalui REST API. Backe
   <img src="https://img.shields.io/badge/Alembic-Migrations-306998" alt="Alembic" />
 </p>
 
-## ✨ Tanggung jawab backend
+✨ Tanggung jawab backend
 
 - 📥 **Menerima unggahan rekaman** dalam format MP3, WAV, M4A, dan MP4.
 - 💾 **Menyimpan berkas dan metadata** rekaman, termasuk nama, ukuran, tipe, durasi, dan status pemrosesan.
@@ -113,61 +113,61 @@ backend/
 
 ### Folder `app/core/` — konfigurasi inti
 
-| File | Kegunaan |
-| --- | --- |
-| `database.py` | Membaca `DATABASE_URL`, membuat koneksi SQLAlchemy, session database, dan Base model. |
-| `dependencies.py` | Menyediakan session database untuk endpoint dan menutupnya setelah request selesai. |
+| File                | Kegunaan                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------- |
+| `database.py`     | Membaca`DATABASE_URL`, membuat koneksi SQLAlchemy, session database, dan Base model. |
+| `dependencies.py` | Menyediakan session database untuk endpoint dan menutupnya setelah request selesai.    |
 
 ### Folder `app/models/` — representasi tabel database
 
-| File | Kegunaan |
-| --- | --- |
-| `_init_.py` | Mengimpor model `Recording` dan `Transcript` agar keduanya dapat dimuat bersama. |
-| `recording.py` | Mendefinisikan tabel rekaman, metadata berkas, durasi, dan status pemrosesan. |
-| `transcript.py` | Mendefinisikan tabel transkrip dan relasinya ke rekaman. |
+| File              | Kegunaan                                                                            |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `_init_.py`     | Mengimpor model`Recording` dan `Transcript` agar keduanya dapat dimuat bersama. |
+| `recording.py`  | Mendefinisikan tabel rekaman, metadata berkas, durasi, dan status pemrosesan.       |
+| `transcript.py` | Mendefinisikan tabel transkrip dan relasinya ke rekaman.                            |
 
 ### Folder `app/routers/` — endpoint REST API
 
-| File | Kegunaan |
-| --- | --- |
-| `recording_router.py` | Endpoint untuk mengunggah, membuat, melihat, mengunduh, dan menghapus rekaman; unggahan juga memulai tugas transkripsi. |
-| `transcript_router.py` | Endpoint untuk membuat, melihat, mengunduh sebagai TXT, dan menghapus transkrip. |
+| File                     | Kegunaan                                                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `recording_router.py`  | Endpoint untuk mengunggah, membuat, melihat, mengunduh, dan menghapus rekaman; unggahan juga memulai tugas transkripsi. |
+| `transcript_router.py` | Endpoint untuk membuat, melihat, mengunduh sebagai TXT, dan menghapus transkrip.                                        |
 
 ### Folder `app/schemas/` — bentuk data API
 
-| File | Kegunaan |
-| --- | --- |
-| `recording_schema.py` | Skema Pydantic untuk data rekaman masuk dan respons API. |
+| File                     | Kegunaan                                                   |
+| ------------------------ | ---------------------------------------------------------- |
+| `recording_schema.py`  | Skema Pydantic untuk data rekaman masuk dan respons API.   |
 | `transcript_schema.py` | Skema Pydantic untuk data transkrip masuk dan respons API. |
 
 ### Folder `app/services/` — logika layanan
 
-| File | Kegunaan |
-| --- | --- |
-| `storage.py` | Memeriksa ekstensi file yang diizinkan dan menyimpan unggahan ke direktori bertanggal di `uploads/audio/`. |
-| `whisper_service.py` | Menjalankan transkripsi background dengan `faster-whisper`, memperbarui status, dan menyimpan hasil transkrip. |
+| File                   | Kegunaan                                                                                                        |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `storage.py`         | Memeriksa ekstensi file yang diizinkan dan menyimpan unggahan ke direktori bertanggal di`uploads/audio/`.     |
+| `whisper_service.py` | Menjalankan transkripsi background dengan`faster-whisper`, memperbarui status, dan menyimpan hasil transkrip. |
 
 ### File utama aplikasi
 
-| File | Kegunaan |
-| --- | --- |
-| `app/main.py` | Membuat aplikasi FastAPI, mengatur CORS, mendaftarkan router, dan menyediakan endpoint pemeriksaan layanan. |
-| `requirements.txt` | Daftar dependensi Python backend. |
-| `.env` | Konfigurasi lokal seperti `DATABASE_URL` dan `WHISPER_MODEL_SIZE`; buat file ini sendiri dan jangan commit nilai rahasia. |
-| `alembic.ini` | Konfigurasi Alembic, termasuk lokasi skrip migrasi. |
-| `README.md` | Dokumentasi penggunaan backend ini. |
-| `REVIEW.md` | Catatan review proyek backend. |
+| File                 | Kegunaan                                                                                                                     |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `app/main.py`      | Membuat aplikasi FastAPI, mengatur CORS, mendaftarkan router, dan menyediakan endpoint pemeriksaan layanan.                  |
+| `requirements.txt` | Daftar dependensi Python backend.                                                                                            |
+| `.env`             | Konfigurasi lokal seperti`DATABASE_URL` dan `WHISPER_MODEL_SIZE`; buat file ini sendiri dan jangan commit nilai rahasia. |
+| `alembic.ini`      | Konfigurasi Alembic, termasuk lokasi skrip migrasi.                                                                          |
+| `README.md`        | Dokumentasi penggunaan backend ini.                                                                                          |
+| `REVIEW.md`        | Catatan review proyek backend.                                                                                               |
 
 ### Folder `alembic/` — migrasi database
 
-| File/folder | Kegunaan |
-| --- | --- |
-| `env.py` | Menghubungkan metadata model dengan proses migrasi Alembic. |
-| `script.py.mako` | Template untuk membuat file migrasi baru. |
-| `README` | Catatan bawaan Alembic. |
-| `versions/17fa159d77c9_create_recordings_table.py` | Migrasi awal untuk membuat tabel `recordings`. |
-| `versions/f056e8abdc46_create_transcript_table.py` | Migrasi untuk membuat tabel `transcripts` dan relasinya ke rekaman. |
-| `versions/b68ddba4077d_add_recording_metadata_and_status_fields.py` | Migrasi untuk menambahkan metadata file dan status pemrosesan ke tabel `recordings`. |
+| File/folder                                                           | Kegunaan                                                                              |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `env.py`                                                            | Menghubungkan metadata model dengan proses migrasi Alembic.                           |
+| `script.py.mako`                                                    | Template untuk membuat file migrasi baru.                                             |
+| `README`                                                            | Catatan bawaan Alembic.                                                               |
+| `versions/17fa159d77c9_create_recordings_table.py`                  | Migrasi awal untuk membuat tabel`recordings`.                                       |
+| `versions/f056e8abdc46_create_transcript_table.py`                  | Migrasi untuk membuat tabel`transcripts` dan relasinya ke rekaman.                  |
+| `versions/b68ddba4077d_add_recording_metadata_and_status_fields.py` | Migrasi untuk menambahkan metadata file dan status pemrosesan ke tabel`recordings`. |
 
 Folder `uploads/audio/` dibuat saat ada unggahan. File disimpan di subfolder tanggal dengan pola `uploads/audio/<YYYYMMDD>/`; folder ini berisi data runtime, bukan source code.
 

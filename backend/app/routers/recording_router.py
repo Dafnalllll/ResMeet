@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 import os
+import mimetypes
 
 from app.core.dependencies import get_db
 from app.models.recording import Recording
@@ -133,6 +134,41 @@ def download_recording(
         path=recording.file_path,
         filename=recording.filename,
         media_type="audio/mpeg"
+    )
+
+@router.get("/{recording_id}/stream")
+def stream_recording(
+    recording_id: UUID,
+    db: Session = Depends(get_db)
+):
+    recording = (
+        db.query(Recording)
+        .filter(Recording.id == recording_id)
+        .first()
+    )
+
+    if not recording:
+        raise HTTPException(
+            status_code=404,
+            detail="Recording not found"
+        )
+
+    if not os.path.exists(recording.file_path):
+        raise HTTPException(
+            status_code=404,
+            detail="Media file not found"
+        )
+
+    media_type = recording.mime_type
+    if not media_type:
+        media_type, _ = mimetypes.guess_type(recording.file_path)
+    if not media_type:
+        media_type = "application/octet-stream"
+
+    return FileResponse(
+        path=recording.file_path,
+        filename=recording.filename,
+        media_type=media_type
     )
 
 @router.delete("/{recording_id}")
