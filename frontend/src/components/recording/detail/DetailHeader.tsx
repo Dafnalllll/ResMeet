@@ -1,10 +1,10 @@
 import type { Recording } from "@/types/recording";
-import { formatDuration, formatDurationLong, formatFullDate, formatTimeOfDay } from "@/lib/format";
+import { formatDurationLong, formatFullDate, formatTimeOfDay } from "@/lib/format";
 import { ArrowLeftIcon } from "@/components/icons/ArrowIcons";
 import { TrashIcon } from "@/components/icons/ActionIcons";
 import { CalendarIcon, ClockIcon, TagIcon } from "@/components/icons/MetaIcons";
 import StatusPill from "./StatusPill";
-import WaveformStrip from "./WaveformStrip";
+import MediaPlayer from "./MediaPlayer";
 
 interface DetailHeaderProps {
   recording: Recording;
@@ -21,7 +21,7 @@ export default function DetailHeader({ recording, onBack, onDelete }: DetailHead
           onClick={onBack}
           className="rsm-action cursor-pointer group inline-flex items-center gap-2 rounded-full border border-(--rsm-line)] bg-(--rsm-card)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-(--rsm-ink-soft)] transition-colors hover:border-(--rsm-line-strong)] hover:text-(--rsm-ink)] animate-rsm-fade"
         >
-          <ArrowLeftIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
+          <ArrowLeftIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1" />      
           Kembali ke daftar
         </button>
 
@@ -79,18 +79,7 @@ export default function DetailHeader({ recording, onBack, onDelete }: DetailHead
         </dl>
       </div>
 
-      <div
-        className="rsm-lift relative overflow-hidden rounded-2xl border border-(--rsm-line)] bg-[linear-gradient(180deg,var(--rsm-card),transparent)] px-5 py-4 animate-rsm-rise"
-        style={{ animationDelay: "160ms" }}
-      >
-        <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-(--rsm-ink-mute)]">
-          <span>Gelombang audio</span>
-          <span className="tabular-nums">
-            {formatDuration(recording.duration)}
-          </span>
-        </div>
-        <WaveformStrip seed={recording.id} />
-      </div>
+      <MediaPlayer recording={recording} />
     </header>
   );
 }

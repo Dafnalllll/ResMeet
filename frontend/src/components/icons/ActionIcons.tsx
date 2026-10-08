@@ -179,3 +179,30 @@ export function TrashIcon({ className = "h-4 w-4", ...props }: IconProps) {
     </svg>
   );
 }
+
+export function PlayIcon({ className = "h-4 w-4", ...props }: IconProps) {
+  return (
+    <svg
+      {...defaultIconProps}
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      <polygon points="6 3 20 12 6 21 6 3" />
+    </svg>
+  );
+}
+
+export function PauseIcon({ className = "h-4 w-4", ...props }: IconProps) {
+  return (
+    <svg
+      {...defaultIconProps}
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="5" y="3" width="4" height="18" rx="1" />
+      <rect x="15" y="3" width="4" height="18" rx="1" />
+    </svg>
+  );
+}

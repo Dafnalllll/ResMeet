@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { buttonActions } from "@/components/button";
@@ -26,6 +26,7 @@ import { getRecordingById, deleteRecording } from "@/services/recording";
 import { getTranscriptByRecordingId } from "@/services/transcript";
 import type { Recording } from "@/types/recording";
 import type { Transcript } from "@/types/transcript";
+import { fadeIn } from "@/lib/animations";
 
 /** Komponen utama halaman detail, termasuk pemuatan data dan aksi ekspor. */
 export default function Detail() {
@@ -41,7 +42,14 @@ export default function Detail() {
   const [reloadKey, setReloadKey] = useState(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const detailRef = useRef<HTMLDivElement>(null);
   const exportTitle = recording?.title ?? "transcript";
+
+  useEffect(() => {
+    if (!isLoading && recording && detailRef.current) {
+      fadeIn(detailRef.current, { duration: 600, translateY: 15 });
+    }
+  }, [isLoading, recording]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -151,7 +159,7 @@ export default function Detail() {
       onRetry={handleRetry}
     />
   ) : (
-    <div className="space-y-8">
+    <div ref={detailRef} className="space-y-8 opacity-0">
       <DetailHeader recording={recording} onBack={handleBack} onDelete={handleDelete} />
 
       <div className="grid gap-6 lg:grid-cols-5">

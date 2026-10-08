@@ -46,7 +46,7 @@ export default function DeleteConfirmationModal({
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-md rounded-2xl border border-(--rsm-line)] bg-(--rsm-card)] p-6 shadow-2xl animate-rsm-rise">
+      <div className="relative bg-black w-full max-w-md rounded-2xl border border-(--rsm-line)] bg-(--rsm-card)] p-6 shadow-2xl animate-rsm-rise">
         <div className="flex items-start gap-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500/10 text-red-500">
             <TrashIcon className="h-5 w-5" />
